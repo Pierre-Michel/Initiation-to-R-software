@@ -40,7 +40,7 @@ d) Add one logical column to the `data.frame`, this column should indicate if th
 e) Remove the first and last columns.
 f) How many available packages are there in your R session ? Which ones ? Use `library()`.
 g) Import in a `data.frame` the data from the file **airquality** in package `datasets`. What does it contain ?
-h) Print some descriptive statistics about the columns of this dataset. Comment. Below is what you should get: 
+h) Print some descriptive statistics about the columns of this dataset. Comment the results. Below is what you should get: 
 ```{r, echo = F} 
 summary(airquality)
 ```
