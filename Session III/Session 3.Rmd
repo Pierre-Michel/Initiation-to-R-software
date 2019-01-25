@@ -24,7 +24,7 @@ To load text files stored in your computer, use the function `read.table()`.
 - `header`: `TRUE` if file contains columns names, `FALSE` by default 
 
 ```{r, echo=T, eval=T, warning=F}
-tab = read.table("../data/sex_gender.txt", header = T); head(tab, 3)
+tab = read.table("../data/age_gender.txt", header = T); head(tab, 3)
 ```
 
 ## Import text files: variants of `read.table()`
@@ -55,7 +55,7 @@ To export a `data.frame` into text files on your working directory, use the func
 - `col.names` and `row.names`: if `TRUE`, write the columns/rows names
 
 ```{r, echo=T, eval=F, warning=F}
-write.table(tab, "sex_gender.txt", row.names = T, col.names = T)
+write.table(tab, "age_gender.txt", row.names = T, col.names = T)
 ```
 
 `write()` is the same as `write.table()` with less options.
@@ -141,14 +141,80 @@ qchisq(0.1, 8)
 ## Probability distributions examples
 ```{r, echo=T, eval=T, warning=F, fig.height= 5, fig.width=7}
 x=rbinom(100, 5, 1/3)
+par(mfrow = c(1,1))
 barplot(table(x), ylim = c(0, 40))
 ```
 
 ## Probability distributions examples
+
 ```{r, echo=T, eval=T, warning=F, fig.height= 5, fig.width=7}
+# add a barplot to an existing barplot
 barplot(table(x), ylim = c(0, 40))
 barplot(dbinom(0:5, 5, 1/3)*100, add=T, col=2)
 ```
 
 # Descriptive statistics
+
+## Characteristics of a statistical serie
+
+Let $(x,y)$ be a pair of statistical series (`vector` or `data.frame`).
+
+- `table(x)` returns the value counts of $x$ (for $x$ discrete or character).
+- `summary(x)` returns a summary of descriptives statistics of $x$ (mninimum, 1st quartile, mean, median, 3rd quartile, maximum), for $x$ numeric.
+- `mean(x)`, `median(x)`, `var(x)`, `sd(x)` for mean, median, variance and standard-deviation ($x$ numeric).
+- `quantile(x, probs)` returns the quantiles of $x$ (numeric) corresponding to parameter vector of probabilities (% of the population)/ Returns quartiles by default. 
+- `cor(x,y)`, `cov(x,y)` return the correlation/covariance matrix between $x$ and $y$ (numeric).
+
+## Characteristics of a statistical serie: examples
+
+```{r, echo = T, eval = F}
+# Try this
+age = c(18, 15, 12, 16, 20, 17)
+weight = c(55, 57, 46, 54, 60,57)
+name = c("a", "b", "c", "a")
+table(weight); table(name)
+summary(weight); summary(name)
+mean(weight)
+quantile(age)
+quantile(weight)
+cor(age, weight)
+quantile(weight, probs = 0.25)
+quantile(age, probs = c(0.1, 0.4))
+```
+
+## Visualization of a statistical serie
+
+- `hist(x)` plot the histogram of $x$.
+- `density(x)` computes the kernel density estimator of $x$..
+- `ecdf(x)` computes the empirical distribution function of $x$.
+- `barplot(x)` bar chart of $x$ (discrete).
+- `stem(x)` tree of values of $x$ (discrete).
+- `boxplot(x)` boxplot of values of $x$ (discrete).
+- `qqnorm(x)` plot the quantiles of $x$ in function of the quantiles of the normal distribution.
+- `qqplot(x,y)` plot the quantiles of $x$ in function of the quantiles of $y$.
+- `plot(x)` plot the values of $x$.
+- `plot(x,y)` scatter plot of coordinates $(x,y)$.
+
+## Examples: estimation of the distribution function using the empirical distribution function (`ecdf()`)
+
+The **empirical distribution function** of a series of observations $x_1, ..., x_n$ is the **step function** between points $(x_i, \frac{i}{n})$, it is defined as follows:
+
+$$ F_n(x) = \frac{\#\{x_i<= x\}}{n} = \frac{1}{n}\sum_{i=1}^n \mathbb{1}_{\{x_i<=x\}}$$
+If $x_1,...,x_n$ are realizations of random variable $X$, $F_n(x)$ is an estimation of the distribution function of $X$: $F(x) = P(X<=x)$.
+
+$\forall x, F_n(x) \rightarrow F$ when $n\rightarrow +\infty$.
+
+## Examples: estimation of the distribution function of a distribution
+
+<div class="columns-2">
+  - Bullet 1
+  - Bullet 2
+  - Bullet 3
+  
+  - Bullet 1
+  - Bullet 2
+  - Bullet 3
+</div>
+
+
 
