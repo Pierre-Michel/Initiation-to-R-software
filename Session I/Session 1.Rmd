@@ -1,0 +1,397 @@
+---
+title: "Initiation to R software Session I"
+author: "Pierre Michel"
+date: "Master AMSE 1st year, 2019"
+output:
+  ioslides_presentation: 
+    transition: slower
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Introduction
+
+## General information on R
+
+- [R](https://www.r-project.org/) (1995, AT&T Bell Laboratories) is a software for **statistical analysis** and **graphics**, it is a clone of S-PLUS, mainly written in C language.
+
+- R is **free software**, distributed freely under the terms of [GNU](https://www.gnu.org/) Public Licence of the [Free Software Foundation](https://www.fsf.org/) (FSF). The development and distribution are ensured by several statisticians (R Development Core Team). It is **compatible with all platforms**.
+
+- Files and instructions for installing R, tutorials and updates are available from the [CRAN](http://cran.r-project.org/) (Comprehensive R Archive Network).
+
+## Free softwares
+
+The FSF has a definition of free software based on four **freedoms**:
+
+1. The freedom to **run** the program, for all uses.
+2. The freedom to **study** the functioning of the program (this requires access to the source code).
+3. The freedom to **redistribute** copies (this includes the freedom to sell copies).
+4. The freedom to **improve** the program and publish its improvements (this encourages the creation of a community of developers improving the software). 
+
+## General information...
+
+R programming language is:
+
+1. interpreted: the **available functions** are located in a library (i.e a directory), organized in **packages** containing functions, operators and datasets.
+
+2. object-oriented: variables, data, results in a R session are stored in the form of **objects** in memory in the **workspace**.
+
+Try the following example:
+
+```{r object, echo=T, eval=F}
+a = 1 # store variable a containing the value 1
+a = a + 1 # add 1 to a 
+print(a) # print the value of a
+```
+
+## Manage the working directory
+
+To print the path to the **current** working directory (set by default) use the following command:
+
+```{r getwd, echo=T, eval=F}
+getwd()
+```
+
+the working directory can be assigned by the user using the following command:
+
+```{r setwd, echo=T, eval=F}
+setwd("C:/Users/myName") # Windows example
+```
+
+These two functions are very useful to manage your different projects in R.
+
+## Tips and tricks to start using R
+
+The first thing to do is to run R (type `R` in a terminal on Unix, or run the Rgui on Windows). You have now access to the R console. Below are some tips and tricks for using R:
+
+- the command `q()` quits R
+- press Esc to interrupt R
+- press &uarr; and &darr; to recall last commands
+- press &larr; and &rarr; to move the cursor on the command line 
+- multiple commands on the same line must be separated by `;`
+- reserved words: `NA`, `letters`, `LETTERS`, `T`, `F`, `TRUE`, `FALSE`
+- `n` is not the same object as `N`: R is case-sensitive 
+- run a R script using the command `source("myFile.R")`
+- print a result: `print()`, use code comments: `#`
+
+## Manage the workspace
+
+* Most of the commands you will use in R will **create objects**. 
+* To create an object, we use an **assignment operator**: `<-` or `=`.
+
+```{r assign, echo=T, eval=F}
+# Try these examples
+n = 5
+M = matrix(1:10, 2, 5)
+N <- c(1, 2, 3)
+h = n + N
+n = 5 ; M = matrix(1:10, 2, 5); N <- c(1, 2, 3); h = n + N
+```
+
+* To print the value of an object, type its name.
+* To print all the objects created in the workspace, use: `objects()` or `ls()`.
+* To remove objects, use: `remove()` or `rm()`.
+
+# Functions and operators
+
+## Functions and operators
+
+- Objects that interact with other objects, stored in packages.
+- Among the pre-installed packages, the package `base` proposes basis functions and operators for reading and handling data and some standard statistical and graphical functions. 
+- To list the loaded packages, use: `search()`.
+- To list the available packages, use: `library()`.
+- To load a package, use: `library("packageName")`.
+- To list the functions of a package, use: `help(package = "packageName")`.
+
+```{r lib_survivial, echo=T, eval=F}
+# Try this example
+library("survival")
+help(package = "survival")
+```
+
+## Functions and operators: `help()`
+
+- To get help on R in html format, use: `help.start()`.
+- To get help on a function from a loaded package, use: `help()` or `?`.
+
+```{r help, echo=T, eval=F}
+# Try this example
+?"+"
+help("*")
+help(log)
+help("log")
+?sum
+```
+
+Note: Actually, this is one of the **most important function** for a R programmer, so I advise to **always** see the help on a function before using it.  
+
+## Other objects
+
+* The main object types are: `vector`, `factor`, `matrix`, `array`, `time-series`, `list` and `data.frame`
+* An object is characterized by its **name**, its **content**, and two attributes:
+  + `mode()` which can be numeric, character, logical or complex,
+  + `length()` which gives the number of elements in the object.
+* A missing value is represented by `NA` for any mode.
+
+```{r mode, echo=T, eval=F}
+# Try this example
+u = 1:3
+v = letters[1:3]
+w = c("a", "b", NA)
+x = c(T,F)
+mode(u); mode(v); mode(w); mode(x)
+```
+
+# Vectors
+
+## Vectors
+
+A vector is an ordered sequence of elements of the **same mode**.
+
+Here is an example with a **numeric** vector:
+
+```{r mode_vector_numeric, echo=T, eval=T}
+u = 1:5
+print(u); mode(u); length(u)
+```
+
+## Vectors
+
+A vector is an ordered sequence of elements of the **same mode**.
+
+Here is an example with a **character** vector:
+
+```{r mode_vector_character, echo=T, eval=T}
+v = c("a","b","c")
+print(v); mode(v); length(v)
+```
+
+## Vectors
+
+A vector is an ordered sequence of elements of the **same mode**.
+
+Here is an example with a **logical** vector:
+
+```{r mode_vector_logical, echo=T, eval=T}
+w = c(T,F)
+print(w); mode(w); length(w)
+```
+
+## Creating vectors
+
+To create a vector enter some values separated by `,` with the function `c()` ("c" stands for "concatenate").
+
+```{r create_vector, echo=T, eval=T}
+u = c(1, 2, 3)
+v = c("a","b","c")
+w = c(T,F)
+print(u); print(v); print(w);
+```
+
+## Creating numeric vectors
+
+- `:` operator to create an ordered sequence.
+- `seq()`: create a regular sequence.
+- `rep()`: duplicate a sequence.
+- `sample()`: create random vectors (see further).
+
+```{r create_numeric_vector, echo=T, eval=F}
+# Try this example
+u = 1:10
+v = seq(from = 0, to = 10, length = 11)
+w = seq(from = 0, to = 2, by = 0.5)
+t = rep(1:4, 2)
+r = rep(1:4, each = 2)
+print(u); print(v); print(w); print(t); print(r);
+```
+
+## Creating character vectors
+
+- `letters`: letters in lower cases (from a to z) 
+- `LETTERS`: letters in upper cases (from A to Z)
+
+```{r create_character_vector, echo=T, eval=T}
+u = letters
+v = LETTERS
+u[3]
+v[c(1,2,4)]
+```
+
+## Creating random vectors
+
+The function `sample()` draws random samples, with or without replacement, uniformly or according to a discrete distribution.
+
+
+```{r create_random_vector, echo=T, eval=T}
+u = sample(1:10)
+v = sample(1:10, 3)
+w = sample(1:2, 5, replace = T)
+x = sample(c(1, 2, 3, 4), 3, prob = c(0.1, 0.2, 0.6, 0.1))
+print(u); print(v); print(w); print(x);
+```
+
+## Creating random samples
+
+The user can draw random samples from a given distribution, in the following example we only consider normal and Poisson distributions, so do not hesistate to see the other [available distrubtions](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Distributions.html). 
+
+```{r create_random_vector_dist, echo=T, eval=T, fig.height= 2.5}
+u = rnorm(100) # normal distribution with parameters 0 and 1
+v = rnorm(100, 2, 3) # normal distribution with parameters 2 and 3
+w = rpois(100, 3) # Poisson distribution with parameter 3
+par(mfrow = c(1,3)); hist(u); hist(v); hist(w); # plot histograms
+```
+
+## Element-wise vector operations
+
+ - arithmetic: `+`,`-`,`*`,`/`,`^` 
+ - comparison: `>`, `<`, `>=`, `<=`, `==`, `!=`
+ - logical: `&`, `|`, `!`
+
+```{r element_vec_op, echo=T, eval=F}
+# Try this example
+v1 = 1:2
+v2 = c(T, F)
+v3 = letters[c(1, 2)]
+v4 = rep(1:2, 2)
+v5 = v1 + v2
+v6 = v1 + v4
+v7 = v1 / v3
+v8 = v1 < v2
+v9 = v1 ^ 2 
+v10 = v1 == v2
+v11 =! v10
+```
+
+## Global vector operations
+
+`identical()` and `all.equal()` functions 
+
+```{r global_vec_op, echo=T, eval=T}
+v1 = 1:2; v2 = c(T, F)
+w = identical(v1, v2) # for all mode vectors
+x = all.equal(v1, v2) # for numeric vectors
+v2 = as.numeric(v2) # converts to numeric
+print(w); print(x);
+all.equal(v1, v2)
+```
+
+## Global vector operations: `paste()`
+
+This function aims to change vectors in character vectors, and "paste" them element by element. The function `paste0()` does the same thing, without a space between elements.
+
+```{r global_vec_op_paste, echo=T, eval=T}
+x1 = 0:2
+x2 = c("a", "b", "c")
+paste(x1, x2)
+paste0(x1, x2)
+```
+
+## Selecting vector elements by position indices
+
+Position **indices** can be used for vectors using `[]`.
+
+```{r sel_vec_ind, echo=T, eval=T}
+v = -3:2
+v[3]
+a = c(4,6)
+v[a]
+```
+
+## Selecting vector elements with boolean vectors
+
+A boolean vector can contain only the value `TRUE` or `FALSE`, it can be used to select elements in a vector of the **same size**. 
+
+```{r sel_vec_bool, echo=T, eval=T}
+v = -3:2
+l=c(F, F, F,F,T,T); v[l] 
+l = v > 0; v[l]
+```
+
+## Selecting vector elements with boolean vectors: `which()`
+
+The `which()` function returns the positions for those the logical indicator is `TRUE`.
+
+```{r sel_vec_bool_which, echo=T, eval=T}
+v = -3:2
+l = which(v > 0); v[l]
+```
+
+## Selecting vector elements with negative indices
+
+Negative position indices can be used to **deselect** corresponding elements.
+
+```{r sel_vec_bool_neg, echo=T, eval=T}
+v = -3:2
+w = v[-4]
+w
+```
+
+## Additional information on vectors
+
+If two vectors have not the same length, arithmetic and comparison operations return a vector of the same length as the longest one, and duplicating the shortest one. 
+
+```{r not_same_length_vec, echo=T, eval=T}
+v = 1:2; w = 1:4; v + w;
+```
+
+To see a vector mode, use the functions `is.numeric()`, `is.logical()`, or `is.character()`. 
+
+```{r mode_vec, echo=T, eval=T}
+v = 1:2; is.logical(v); is.numeric(v)
+```
+
+## Additional information on vectors
+
+To change a vector mode, use the functions `as.numeric()`, `as.logical()`, or `as.character()`. 
+
+```{r change_mode_vec, echo=T, eval=T, warning=F}
+u = c("1", "d", "T"); as.numeric(u)
+v = 0:2; as.logical(v)
+w = 1:3; as.character(w)
+```
+
+# Factors
+
+## Factors
+
+A factor is a **categorical variable** containing two attributes:
+
+- a vector of **values**
+- a vector of **levels**
+
+It must contain elements of same mode.
+
+```{r fac_c, echo=T, eval=T, warning=F}
+factor(1:4) 
+factor(letters[c(1,3,4)], levels=c("a","b","c","d"))
+```
+
+## Creating factors
+
+```{r fac_cr, echo=T, eval=T, warning=F}
+factor(letters[c(1,3,4)], levels=c("a","b","c"))
+```
+
+To create a factor, use the function `factor()`. The functions `is.factor()` and `as.factor()` are also available.
+
+```{r fac_create, echo=T, eval=T, warning=F}
+factor(1:3); factor(1:3, levels=1:5) 
+```
+
+## Creating factors
+
+```{r fac_create2, echo=T, eval=T, warning=F}
+factor(1:3, exclude=2); factor(1:3, labels=c("a", "b", "c"))
+x=1:3; is.factor(x); as.factor(x)
+```
+
+## Creating factors: `cut()`
+
+Divides the range of a numeric vector in $n$ classes et encodes the values according to the class they belong. The resulting object is a factor.
+
+```{r fac_cut, echo=T, eval=T, warning=F}
+v=1:10; cut(v, breaks=2)
+cut(v, breaks=c(1,5.5,10))
+```
