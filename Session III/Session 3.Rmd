@@ -299,6 +299,7 @@ t = hist(x, prob = T, breaks = 12)
 
 ## Examples: density estimation of a continuous probability distribution
 
+\scriptsize
 ```{r, echo = T, eval =T, fig.height = 6}
 names(t)
 t$breaks
