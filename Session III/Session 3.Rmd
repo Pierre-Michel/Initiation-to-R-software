@@ -1,0 +1,154 @@
+---
+title: "Initiation to R software Session III"
+author: "Pierre Michel"
+date: "Master AMSE 1st year, 2019"
+output:
+  ioslides_presentation: 
+    transition: slower
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Import/Export text files
+
+## Import text files
+
+To load text files stored in your computer, use the function `read.table()`.
+
+`read.table(file, sep, header)`
+
+- `file`: the name of the file (character)
+- `sep`: separator used in file (" " by default)
+- `header`: `TRUE` if file contains columns names, `FALSE` by default 
+
+```{r, echo=T, eval=T, warning=F}
+tab = read.table("../data/sex_gender.txt", header = T); head(tab, 3)
+```
+
+## Import text files: variants of `read.table()`
+
+- `file.choose()`: choose a file through the GUI.
+- `read.csv()`: read CSV files.
+- `read.delim()`: read delimited text files.
+- `read.fwf()`: read fixed-width-formatted files.
+
+R can read files in specific software formats (Excel, SAS, SPSS, Stata) using the functions from the packages `foreign`.
+
+```{r, echo=T, eval=F, warning=F}
+# Try this
+install.packages("foreign")
+library(foreign)
+?read.dta
+```
+
+## Export text files
+
+To export a `data.frame` into text files on your working directory, use the function `write.table()`.
+
+`write.table(x, file, append, col.names, row.names)`
+
+- `x`: `data.frame`
+- `file`: name of the file in which to write
+- `append`: if `TRUE`, add to an (eventually existing) file, if `FALSE`, overwrite the existing file (default)  
+- `col.names` and `row.names`: if `TRUE`, write the columns/rows names
+
+```{r, echo=T, eval=F, warning=F}
+write.table(tab, "sex_gender.txt", row.names = T, col.names = T)
+```
+
+`write()` is the same as `write.table()` with less options.
+
+## Save/Load R objects
+
+R objects can be saved in both ascii and binary formats:
+
+- `dump()`: save R objects in ascii format
+- `source()`: load R objects saved with `dump()`
+- `save()`: save R objects in binary format
+- `load()`: load R objects saved with `save()`
+
+```{r, echo=T, eval=F, warning=F}
+# Try this
+dump(ls(), file = "objects.txt")
+source("objects.txt")
+```
+
+# Probability distributions and sample simulation
+
+## Probability distribution and sample simulation
+
+```{r, echo=F, eval=T, warning=F, fig.height= 5, fig.width= 8}
+x = rnorm(1000, 0, 1)
+par(mfrow = c(1,2))
+curve(dnorm(x), -3, 3, ylab = "Density", main = "Density of normal distribution N(0,1)")
+hist(x, main = "Distribution of 1000 random samples")
+```
+
+## Probability distribution and sample simulation
+```{r, echo=F, eval=T, warning=F, fig.height= 5, fig.width= 8}
+n = c(100, 500, 1000, 10000)
+par(mfrow = c(2,2))
+for (i in n) {
+  x = rnorm(i, 0, 1)
+  hist(x, main = paste("N =", i))
+  lines(density(x, adjust=2), lty="dotted")   # add another "smoother" density
+}
+```
+
+## Usual probability distributions
+
+Distributions for **continuous** variables:
+
+- **Normal** distribution: $X \leadsto N(\mu, \sigma)$: $f(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2\sigma^2}(x-\mu)^2}, \forall x\in\mathbb{R}$.
+- **Uniform** distribution: $X \leadsto U(a, b)$: if $x\in[a,b]$, $f(x)=\frac{1}{b-a}$, elsewhere $f(x) = 0$.
+
+Distributions for **discrete** variables:
+
+- **Poisson** distribution: $X \leadsto P(\lambda)$: $P(X=x)=e^{-\lambda}\frac{\lambda^x}{x!}, \forall x\in\mathbb{N}$.
+- **Binomial** distribution: $X \leadsto B(n,p)$: $P(X=x)=C_n^x p^x (1-p)^{n-x}, \forall x\in[0,n]$.
+
+## Probability distributions in R
+
+R can evaluate probabilistic quantitites following usual probability distributions.
+
+Usual distributions: `*norm()`, `*binom()`, `*chisq()`, `*unif()`, `*pois()`, `*t()`, `*exp()`, ...
+
+`*` should be replaced by one of the following:
+ 
+- `p` distribution function, $F(x) = P(X<=x)$, use `pnorm()`, `pbinom()`, `pt()`, ...
+- `d` density $P(X=x)$ or $f(x)$, use `dnorm()`, `dt()`, `dpois()`, ...  
+- `q` quantiles of order $q$, $\text{argmin}_x\{P(X<=x)>q\}$, use `qnorm()`, `qbinom()`, `qchisq()`, ... 
+- `r` sample simulation, use `runif()`, `rpois()`, ...
+
+## Probability distributions examples
+
+```{r, echo=T, eval=T, warning=F, fig.height= 5, fig.width= 8}
+dbinom(3, 10, 0.2)
+rbinom(10, 10, 0.2)
+pbinom(1, 10, 0.2)
+```
+
+## Probability distributions examples
+
+```{r, echo=T, eval=T, warning=F, fig.height= 5, fig.width= 8}
+pbinom(2, 10, 0.2)
+qbinom(0.5, 10, 0.2) 
+qchisq(0.1, 8)
+```
+
+## Probability distributions examples
+```{r, echo=T, eval=T, warning=F, fig.height= 5, fig.width=7}
+x=rbinom(100, 5, 1/3)
+barplot(table(x), ylim = c(0, 40))
+```
+
+## Probability distributions examples
+```{r, echo=T, eval=T, warning=F, fig.height= 5, fig.width=7}
+barplot(table(x), ylim = c(0, 40))
+barplot(dbinom(0:5, 5, 1/3)*100, add=T, col=2)
+```
+
+# Descriptive statistics
+
