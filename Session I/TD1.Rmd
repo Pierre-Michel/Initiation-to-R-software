@@ -2,7 +2,9 @@
 title: "Initiation to R Software"
 author: "Pierre Michel"
 date: "Master AMSE 1st year, 2019"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -51,7 +53,7 @@ hist(n500)
 hist(n1000)
 hist(n10000)
 par(mfrow = c(1,1)) 
-curve(dnorm(x,2,0.5),0,4)
+curve(dnorm(x,2,0.5),0,4, main = "Density of x")
 ```
 
 ## 4) Discretization

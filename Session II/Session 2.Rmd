@@ -3,7 +3,8 @@ title: "Initiation to R software Session II"
 author: "Pierre Michel"
 date: "Master AMSE 1st year, 2019"
 output:
-  ioslides_presentation: 
+  beamer_presentation: default
+  ioslides_presentation:
     transition: slower
 ---
 
@@ -59,6 +60,7 @@ print(M); print(N); print(R)
 
 What if the length of the vector and the dimension of the matrix do not match ?
 
+\footnotesize
 ```{r matrix_match, echo=T, eval=T, warning=T}
 P=matrix(1:5, 2, 5); P;
 Q=matrix(1:3, 2, 5);
@@ -213,7 +215,7 @@ L[c(1,2)] # another sublist
 
 ```{r df, echo=T, eval=T, warning=T}
 L = LETTERS[1:3]
-D = data.frame(x=rep(1,5), y=1:5, fac=sample(L, 5, repl=T))
+D = data.frame(x=rep(1,5), y=1:5, z=sample(L, 5, repl=T))
 D
 ```
 
@@ -225,12 +227,12 @@ D
 ```{r df_el, echo=T, eval=F, warning=T}
 # Try this example
 L = LETTERS[1:3]
-D = data.frame(x=rep(1,5), y=1:5, fac=sample(L, 5, repl=T))
+D = data.frame(x=rep(1,5), y=1:5, z=sample(L, 5, repl=T))
 D[,3] 
 D[”fac”]
 D$fac
 D[1,3]
-D[1,"fac"]
+D[1,"z"]
 is.factor(D[,3])
 ```
 
@@ -248,9 +250,9 @@ is.factor(D[,3])
 ```{r df_fun, echo=T, eval=F, warning=T}
 # Try this example
 L = LETTERS[1:3]
-D = data.frame(x=rep(1,5), y=1:5, fac=sample(L, 5, repl=T))
+D = data.frame(x=rep(1,5), y=1:5, z=sample(L, 5, repl=T))
 colnames(D)
-colnames(D)=c(LETTERS[1:2], "fac")
+colnames(D)=c(LETTERS[1:2], "z")
 D
 rownames(D)=letters[1:5]
 D
@@ -273,7 +275,8 @@ You can also load them:
 ```{r df_read, echo=T, eval=F, warning=T}
 # Try this example
 library(cluster) 
-data(agriculture) # or data(agriculture,package="cluster")
+data(agriculture) 
+# or data(agriculture,package="cluster")
 ```
 
 # Complements
@@ -304,6 +307,7 @@ knitr::kable(data.frame(type = c("vector", "factor", "array", "matrix", "data.fr
 
 ## Very useful functions...
 
+\small
 ```{r useful_fun, echo=F, eval=T, warning=F}
 knitr::kable(data.frame(function_name = c("sum(x)", "prod(x)", "max(x), min(x)", "which.max(x)", "which.min(x)", "range(x)", "mean(x)","median(x)"),
                         description = c("Sum of the elements of x", "Product of the elements of x", "Maximum, minimum of the elements of", "Returns the index of the maximum of the elements of x", "Returns the index of the minimum of the elements of x", "Similar to c(min(x), max(x))", "Mean of the elements of x", "Median of the elements of x")))
@@ -311,31 +315,36 @@ knitr::kable(data.frame(function_name = c("sum(x)", "prod(x)", "max(x), min(x)",
 
 ## Other very useful functions...
 
+\small
 ```{r useful_fun2, echo=F, eval=T, warning=F}
-knitr::kable(data.frame(function_name = c("var(x) or cov(x)", "cor(x)", "sd(x)", "round(x,n)", "rev(x)", "sort(x)", "rank(x)", "scale(x)"),
-                        description = c("Variance of the elements of x, covariance matrix if x is a matrix","Correlation matrix of x if x is a matrix or a data.frame", "Standard deviation of the elements of x", "Rounds the elements of x to n decimals", "Reverse the order of the elements of x", "Sort the elements of x in ascending order", "Rank the elements of x", "Scale (center and reduce) x")))
+knitr::kable(data.frame(function_name = c("var(x)", "cov(x)", "cor(x)", "sd(x)", "round(x,n)", "rev(x)", "sort(x)", "rank(x)", "scale(x)"),
+                        description = c("Variance of the elements of x", "Covariance matrix if x is a matrix","Correlation matrix of x if x is a matrix or a data.frame", "Standard deviation of the elements of x", "Rounds the elements of x to n decimals", "Reverse the order of the elements of x", "Sort the elements of x in ascending order", "Rank the elements of x", "Scale (center and reduce) x")))
 ```
 
 ## ... and other very useful functions...
 
+\small
 ```{r useful_fun3, echo=F, eval=T, warning=F}
-knitr::kable(data.frame(function_name = c("pmin(x,y,...)","cumsum(x)","cumprod(), cummin(), cummax()","match(x,y)","choose(x,k)","na.omit()","na.fail()"),
-                        description = c("A vector whose element i is the minimum between x[i] and y[i]",
+knitr::kable(data.frame(function_name = c("pmin(x,y,...)","cumsum(x)","cumprod()", "cummin()", "cummax()","match(x,y)","choose(x,k)","na.omit()","na.fail()"),
+                        description = c("A vector whose element i is the minimum of x[i] and y[i]",
                                         "A vector whose element i is the sum of x[i] and y[i]",
-                                        "Similar as product, minimum, maximum",
-                                        "Returns a vector of same length as x containing elments of x that are in y",
+                                        "Similar as cumsum() with product",
+                                        "Similar as cumsum() with minimum",
+                                        "Similar as cumsum() with maximum",
+                                        "Vector of same length as x with elements of x that are in y",
                                         "Binomial coefficient","Remove observations with missing values",
                                         "Returns an error message if x contains at least one NA")))
 ```
 
 ## ... and others
 
+\small
 ```{r useful_fun4, echo=F, eval=T, warning=F}
 knitr::kable(data.frame(function_name = c("unique()","table()","subset()", "sample(x,n)"),
-                        description = c("If x is a vector or data.frame, returns a similar object with duplicated observations removed",
-                                        "Returns a table of counts of the different values of x",
+                        description = c("Returns a similar object without duplicates",
+                                        "Returns table of counts of the values of x",
                                         "Returns a selection of x based on criteria",
-                                        "Random sampling, without replacement, of a sample of elements of x, of size n")))
+                                        "Random sampling of x of size n, without replacement")))
 ```
 
 

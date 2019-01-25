@@ -3,6 +3,7 @@ title: "Initiation to R software Session III"
 author: "Pierre Michel"
 date: "Master AMSE 1st year, 2019"
 output:
+  beamer_presentation: default
   ioslides_presentation: 
     transition: slower
 ---
@@ -24,7 +25,8 @@ To load text files stored in your computer, use the function `read.table()`.
 - `header`: `TRUE` if file contains columns names, `FALSE` by default 
 
 ```{r, echo=T, eval=T, warning=F}
-tab = read.table("../data/age_gender.txt", header = T); head(tab, 3)
+tab = read.table("../data/age_gender.txt", header = T) 
+head(tab, 3)
 ```
 
 ## Import text files: variants of `read.table()`
@@ -55,7 +57,8 @@ To export a `data.frame` into text files on your working directory, use the func
 - `col.names` and `row.names`: if `TRUE`, write the columns/rows names
 
 ```{r, echo=T, eval=F, warning=F}
-write.table(tab, "age_gender.txt", row.names = T, col.names = T)
+write.table(tab, "age_gender.txt", row.names = T, 
+            col.names = T)
 ```
 
 `write()` is the same as `write.table()` with less options.
@@ -195,26 +198,219 @@ quantile(age, probs = c(0.1, 0.4))
 - `plot(x)` plot the values of $x$.
 - `plot(x,y)` scatter plot of coordinates $(x,y)$.
 
-## Examples: estimation of the distribution function using the empirical distribution function (`ecdf()`)
+## Examples: estimation of the distribution function using the empirical cumulative distribution function (`ecdf()`)
 
 The **empirical distribution function** of a series of observations $x_1, ..., x_n$ is the **step function** between points $(x_i, \frac{i}{n})$, it is defined as follows:
 
-$$ F_n(x) = \frac{\#\{x_i<= x\}}{n} = \frac{1}{n}\sum_{i=1}^n \mathbb{1}_{\{x_i<=x\}}$$
+$$ F_n(x) = \frac{\#\{i: x_i<= x\}}{n} = \frac{1}{n}\sum_{i=1}^n \mathbb{1}_{\{x_i<=x\}}$$
 If $x_1,...,x_n$ are realizations of random variable $X$, $F_n(x)$ is an estimation of the distribution function of $X$: $F(x) = P(X<=x)$.
 
 $\forall x, F_n(x) \rightarrow F$ when $n\rightarrow +\infty$.
 
-## Examples: estimation of the distribution function of a distribution
+## Examples: estimation of the distribution function of a probability distribution
 
-<div class="columns-2">
-  - Bullet 1
-  - Bullet 2
-  - Bullet 3
-  
-  - Bullet 1
-  - Bullet 2
-  - Bullet 3
-</div>
+```{r, echo = T, eval = T, fig.height=6}
+trial = rnorm(10); plot(ecdf(trial))
+```
+
+## Examples: estimation of the distribution function of a probability distribution
+
+```{r, echo = F, eval = T}
+n = c(10,50, 200, 1000)
+par(mfrow = c(2,2))
+for (i in 1:length(n)) {
+  trial = rnorm(n[i]);
+  plot(ecdf(trial),main=paste("ECDF for n =", n[i]))
+  curve(pnorm, add=T)
+}
+```
+
+## Examples: estimation of a discrete probability distribution
+
+For a discrete series $x_1,...,x_n$, consider the proportion of observations that take each value $x$ of the series (equivalent to a bar plot).
+
+$$ p_n(x)=\frac{\#\{i:x_i=x\}}{n}= \frac{1}{n}\sum_{i=1}^n \mathbb{1}_{\{x_i=x\}}$$
+
+If $x_1,...,x_n$ are realizations of a discrete random variable $X$, $p_n(x)$ is an approximation of the probability distribution of $X$, $P(X=x)$. 
+
+The bar plot of the series estimates the graph of the probability distribution of $X$. Greater is $n$, better is the estimation.
+
+## Examples: estimation of a discrete probability distribution
+
+```{r, echo = T}
+trial = rbinom(10, 10, 0.3);
+t = table(trial); t
+stem(trial)
+```
+
+## Examples: estimation of a discrete probability distribution
+
+```{r, echo = T, fig.height=4, fig.width = 5}
+par(mfrow = c(1,1))
+barplot(t/length(trial), main = "Diagram of frequencies")
+```
 
 
+## Examples: estimation of a discrete probability distribution
 
+```{r, echo = F, fig.height=4, fig.width = 6}
+par(mfrow = c(1,2))
+
+trial = rbinom(50, 10, 0.3)
+t = table(trial)
+barplot(t/length(trial), main="n = 50")
+x=0:10
+barplot(dbinom(x,10,0.3),col="red" ,add=T)
+
+trial = rbinom(10000, 10, 0.3)
+t = table(trial)
+barplot(t/length(trial), main="n = 10000")
+x=0:10
+barplot(dbinom(x,10,0.3),col="red" ,add=T)
+```
+
+## Examples: density estimation of a continuous probability distribution
+
+The **density** $f$ of a random variable $X$ can be estimated with a **histogram**: let $I$ be the interval of a series' values and $(I_j)_{j \leq k}$ a partition of $I$ in $k$ classes. The histogram based on this partition is the step function which is the proportion of observations in each class, normalized by class amplitude. Class amplitudes $l_j$ should be adjusted to better match with the real distribution of observations.
+
+$$ \hat{f}_n(x) = \sum_{j=1}^k (\frac{\#\{i:x_i\in I_j\}}{n l_j})1_{\{x\in I_j\}}$$
+In general, classes have the same amplitude, determined by the number of classes $k$ (you can also use `cut()`). 
+
+Greater is $n$, more $\hat{f}_n(x)$ is similar to $f$.
+
+## Examples: density estimation of a continuous probability distribution
+
+`hist(x, breaks, prob, right, col, main, xlab, ylab, ...)`
+
+- `x` is a statistical series
+- `breaks` is a vector of class breakpoints, or a number corresponding to $k+1$, or a function to compute the number of classes. Default uses the Sturge rule ($k = 1+1.322\log_{10} n$)
+
+- `prob` returns the histogram of counts if `prob =  FALSE`, returns the histogram of relative counts (frequencies) if `prob =  TRUE`. Default is `FALSE`.
+- `right` is `TRUE` if the classes of the histogram are right-closed and left-opened, default is `FALSE`
+- `col` is the color
+- `main`, `xlab` and `ylab` are the main title, x-axis title and y-axis title
+
+## Examples: density estimation of a continuous probability distribution
+
+```{r, echo = T, eval =T, fig.height = 6}
+x = rnorm(100); hist(x, prob=T, breaks=12)
+t = hist(x, prob = T, breaks = 12)
+```
+
+## Examples: density estimation of a continuous probability distribution
+
+```{r, echo = T, eval =T, fig.height = 6}
+names(t)
+t$breaks
+t$density
+t$counts
+```
+
+## Examples: density estimation of a continuous probability distribution
+
+```{r, echo = T, eval =T, fig.height = 6}
+trial = rnorm(50); par(mfrow = c(1,2))
+hist(trial); hist(trial, prob=T, main="Density est.")
+```
+
+## Examples: density estimation of a continuous probability distribution
+```{r, echo = F, eval =T, fig.height = 6}
+par(mfrow = c(2,2))
+for (n in c(100,200,500,10000)) {
+  trial=rnorm(n); 
+  hist(trial, prob = T, main=paste("n =", n))
+  curve(dnorm,add = T)
+}
+```
+
+## Examples: density estimation of a continuous probability distribution
+
+The **density** $f$ of a random variable $X$ can be estimated with a **kernel estimator**: the "derivative" of the empirical cumulative distribution function is a classical estimator of the distribution function.
+$\forall x\in I$, and $\epsilon>0$ (a small value), the "derivative" is:
+
+$$\frac{\hat{F}_n(x+\epsilon) - \hat{F}_n(x-\epsilon)}{2\epsilon} = \frac{\#\{i:x_i\in [-\epsilon x, \epsilon x]\}}{2n\epsilon} = \frac{1}{2n\epsilon}\sum_{i=1}^n 1_{-1\leq \frac{x_i - x}{\epsilon} \leq 1}$$
+This estimator assumes that the observations are uniformly drawn around each $x_i$. One can use a smoother distribution, of density $K$, with $k$ is the smoothness parameter. We thus consider the following estimator:
+
+$$ \hat{f}_n(x) = \frac{1}{n\epsilon} \sum_{i=1}^n K(\frac{x-x_i}{\epsilon})$$
+
+## Examples: density estimation of a continuous probability distribution
+
+`density(x, bw, kernel, ...)`
+
+- `x` is a series
+- `bw` is the size of the smoothing window. It is defined by a number. Default is automatic.  
+- `kernel` is a character string giving the kernel used (gaussian, rectangular, ...). Default is gaussian.
+
+The output of `density()` corresponds to descriptive statistics of $x$ and the density estimated on values of $x$.
+
+Use `plot(density())` to plot the density curve.
+
+## Examples: density estimation of a continuous probability distribution
+
+The smoothing window is important, greater it is, smoother is the estimation. Lower it is, noisier is the estimation.
+
+```{r, echo = F}
+par(mfrow = c(1,2))
+plot(density(trial, bw=0.1))
+plot(density(trial, bw=0.5))
+par(mfrow = c(1,1))
+```
+
+## Examples: density estimation
+
+```{r, echo = T}
+density(trial)
+```
+
+## Examples: density estimation
+
+```{r, echo = T}
+plot(density(trial), main="Kernel density estimator")
+```
+
+## Examples: density estimation
+
+```{r, echo = F}
+par(mfrow = c(2,2))
+for (n in c(100,200,500,10000)) {
+  trial=rnorm(n) 
+  plot(density(trial), main=paste("n =",n), ylim = c(0,0.5));
+  curve(dnorm,add=T)
+}
+```
+
+## Examples: characteristics of a series
+
+`boxplot()` plots a **boxplot**, which aims to visualize the characteristics of a series (outliers, symmetry, dispersion). 
+
+`qqnorm()` aims to compare a series' distribution to a standard gaussian distribution. 
+
+```{r, echo = T, eval = T}
+x=c(1,1,2,2,2,3,4); summary(x)
+```
+
+## Examples: characteristics of a series
+
+```{r, echo = T, eval = T}
+boxplot(x)
+```
+
+## Examples: characteristics of a series
+
+```{r, echo = F, eval = T}
+par(mfrow = c(2,2))
+curve(dnorm, xlim = c(-2,2), main = "Density plot")
+boxplot(rnorm(100), ylab = "rnorm(100)", main = "Boxplot")
+curve(dchisq(x,3), xlim = c(0,10), main = "Density plot")
+boxplot(rchisq(100,3), ylab = "rchisq(100,3)", main = "Boxplot")
+```
+
+## Examples: characteristics of a series
+
+```{r, echo = F, eval = T}
+par(mfrow = c(2,2))
+curve(dnorm, xlim = c(-2,2), main = "Density plot")
+qqnorm(rnorm(100))
+curve(dchisq(x,3), xlim = c(0,10), main = "Density plot")
+qqnorm(rchisq(100,3))
+```
